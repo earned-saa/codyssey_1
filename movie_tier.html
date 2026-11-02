@@ -1,0 +1,577 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ko"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;🎬 나의 영화 티어리스트&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>* { box-sizing: border-box; margin: 0; padding: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Noto Sans KR', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #141414;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding-bottom: 40px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>header {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #1a1a2e;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-bottom: 2px solid #e50914;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.container {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width: 900px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 auto;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.search-area {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.search-area input {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex: 1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 14px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #444;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #222;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.search-area input::placeholder { color: #888; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.search-area button {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 18px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #e50914;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.search-area button:hover { background: #b0060f; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#search-results {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.result-card {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #222;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid transparent;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transition: border 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.result-card:hover { border-color: #e50914; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.result-card img {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 140px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>object-fit: cover;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.result-card .no-poster {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 140px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #333;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #aaa;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.result-card .result-title {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.7rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 4px 6px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #ddd;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>white-space: nowrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-overflow: ellipsis;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#warning-msg {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #e50914;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 16px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.section-title {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #aaa;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#unranked {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-height: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #1e1e1e;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 2px dashed #444;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#unranked.drag-over { border-color: #e50914; background: #2a1a1a; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 90px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #2a2a2a;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: grab;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid transparent;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.15s, border 0.15s;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>user-select: none;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card:hover { transform: scale(1.05); border-color: #e50914; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card.dragging { opacity: 0.4; cursor: grabbing; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card img {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 120px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>object-fit: cover;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card .no-poster-card {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 120px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #333;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.65rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #aaa;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card .card-title {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.65rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 4px 5px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #ddd;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>white-space: nowrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-overflow: ellipsis;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.genre-badges {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>top: 4px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>left: 4px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.badge {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(229,9,20,0.85);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 1px 4px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 4px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-section { margin-bottom: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-row {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: stretch;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-height: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-label {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 52px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-width: 52px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.4rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-S .tier-label { background: #ff4444; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-A .tier-label { background: #ff8800; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-B .tier-label { background: #ffcc00; color: #111; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-C .tier-label { background: #44cc44; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-D .tier-label { background: #4488ff; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-F .tier-label { background: #888; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-drop {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex: 1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #1e1e1e;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 2px dashed transparent;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transition: border 0.2s, background 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-height: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-content: flex-start;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tier-drop.drag-over {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-color: #e50914;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #2a1a1a;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.delete-btn {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>top: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>right: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(0,0,0,0.7);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 18px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 18px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.6rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transition: opacity 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.movie-card:hover .delete-btn { opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-area {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap: wrap;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-area button {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 20px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.9rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-reset {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #444;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-reset:hover { background: #666; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-share {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #fee500;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #111;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-share:hover { background: #e6cf00; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-save {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #2ecc71;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-save:hover { background: #27ae60; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#save-msg {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #2ecc71;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-self: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;🎬 나의 영화 티어리스트&lt;/header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="container"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 검색 영역 --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="search-area"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="search-input" placeholder="영화 제목을 검색하세요..." /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button onclick="searchMovies()"&gt;검색&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="warning-msg"&gt;⚠️ 티어리스트에는 최대 10개까지만 추가할 수 있어요!&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="search-results"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 미분류 영역 --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;📥 추가된 영화 (드래그해서 티어에 배치하세요)&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="unranked"</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ondrop="onDrop(event, 'unranked')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 티어 영역 --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-title"&gt;🏆 티어리스트&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="tier-section"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-S"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;S&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-S"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'S')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-A"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;A&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-A"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'A')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-B"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;B&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-B"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'B')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-C"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;C&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-C"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'C')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-D"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;D&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-D"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'D')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tier-row tier-F"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-label"&gt;F&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tier-drop" id="tier-F"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragover="event.preventDefault(); this.classList.add('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondragleave="this.classList.remove('drag-over')"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>ondrop="onDrop(event, 'F')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 버튼 영역 --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="btn-area"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-reset" onclick="resetAll()"&gt;🗑️ 초기화&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-share" onclick="shareKakao()"&gt;💬 카카오톡 공유&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-save" onclick="saveManual()"&gt;💾 저장&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span id="save-msg"&gt;✅ 저장되었습니다!&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 설정 ──────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const API_KEY = '371e7cad73f824fc2da187043a0d26d5';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const GENRE_MAP = {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>28:'액션',18:'드라마',35:'코미디',27:'공포',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>10749:'로맨스',878:'SF',16:'애니',53:'스릴러',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>12:'어드벤처',14:'판타지',80:'범죄',99:'다큐'</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const TIERS = ['S','A','B','C','D','F'];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const MAX = 10;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 상태 ──────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let movies = {};<span class="Apple-converted-space">      </span>// { id: {id, title, poster, genres} }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let placement = {}; <span class="Apple-converted-space">  </span>// { id: 'S'|'A'|...|'unranked' }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let dragId = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 초기 로드 ─────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>window.onload = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>loadFromStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAll();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 검색 ──────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function searchMovies() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const query = document.getElementById('search-input').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!query) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&amp;query=${encodeURIComponent(query)}&amp;language=ko-KR`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const res = await fetch(url);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const data = await res.json();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>renderResults(data.results || []);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} catch(e) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert('검색 중 오류가 발생했습니다. API 키를 확인해주세요.');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('search-input')</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.addEventListener('keydown', e =&gt; { if(e.key==='Enter') searchMovies(); });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderResults(results) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const box = document.getElementById('search-results');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>results.slice(0, 10).forEach(m =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>div.className = 'result-card';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>div.onclick = () =&gt; addMovie(m);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const imgHtml = m.poster_path</p>
+<p class="p1"><span class="Apple-converted-space">          </span>? `&lt;img src="https://image.tmdb.org/t/p/w200${m.poster_path}" alt="${m.title}"&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">          </span>: `&lt;div class="no-poster"&gt;포스터 없음&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>div.innerHTML = `${imgHtml}&lt;div class="result-title"&gt;${m.title}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>box.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 영화 추가 ─────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function addMovie(m) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const total = Object.keys(movies).length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (total &gt;= MAX) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>showWarning();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const id = String(m.id);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (movies[id]) { alert('이미 추가된 영화입니다!'); return; }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const genres = (m.genre_ids || [])</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.slice(0,2).map(g =&gt; GENRE_MAP[g] || '').filter(Boolean);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>movies[id] = { id, title: m.title, poster: m.poster_path || '', genres };</p>
+<p class="p1"><span class="Apple-converted-space">      </span>placement[id] = 'unranked';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAll();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('search-results').innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('search-input').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function showWarning() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const el = document.getElementById('warning-msg');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>el.style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; { el.style.display = 'none'; }, 3000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 렌더링 ────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderAll() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('unranked').innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>TIERS.forEach(t =&gt; { document.getElementById('tier-'+t).innerHTML = ''; });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>Object.values(movies).forEach(m =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const zone = placement[m.id] || 'unranked';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const card = makeCard(m);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (zone === 'unranked') {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('unranked').appendChild(card);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('tier-'+zone).appendChild(card);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function makeCard(m) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.className = 'movie-card';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.draggable = true;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.dataset.id = m.id;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const imgHtml = m.poster</p>
+<p class="p1"><span class="Apple-converted-space">        </span>? `&lt;img src="https://image.tmdb.org/t/p/w200${m.poster}" alt="${m.title}"&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>: `&lt;div class="no-poster-card"&gt;${m.title}&lt;/div&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const badges = m.genres.map(g =&gt; `&lt;span class="badge"&gt;${g}&lt;/span&gt;`).join('');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>${imgHtml}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="genre-badges"&gt;${badges}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-title"&gt;${m.title}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="delete-btn" onclick="deleteMovie('${m.id}')"&gt;✕&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.addEventListener('dragstart', e =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dragId = m.id;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setTimeout(() =&gt; div.classList.add('dragging'), 0);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.addEventListener('dragend', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>div.classList.remove('dragging');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dragId = null;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>return div;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 드롭 ──────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function onDrop(event, zone) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>event.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const dropEl = event.currentTarget;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>dropEl.classList.remove('drag-over');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!dragId) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>placement[dragId] = zone;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAll();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 삭제 ──────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function deleteMovie(id) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>delete movies[id];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>delete placement[id];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAll();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 초기화 ────────────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function resetAll() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!confirm('티어리스트를 초기화할까요?')) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>movies = {};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>placement = {};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAll();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── localStorage ──────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function saveToStorage() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>localStorage.setItem('tier_movies', JSON.stringify(movies));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>localStorage.setItem('tier_placement', JSON.stringify(placement));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function loadFromStorage() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>movies<span class="Apple-converted-space">    </span>= JSON.parse(localStorage.getItem('tier_movies'))<span class="Apple-converted-space">    </span>|| {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>placement = JSON.parse(localStorage.getItem('tier_placement')) || {};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} catch(e) { movies = {}; placement = {}; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function saveManual() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const msg = document.getElementById('save-msg');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>msg.style.display = 'inline';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; { msg.style.display = 'none'; }, 2000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── 카카오톡 공유 ─────────────────────────────────</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function shareKakao() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let text = '🎬 나의 영화 티어리스트\n\n';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>TIERS.forEach(t =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ids = Object.keys(placement).filter(id =&gt; placement[id] === t);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (ids.length === 0) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const titles = ids.map(id =&gt; movies[id]?.title || '').filter(Boolean).join(', ');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text += `[${t}] ${titles}\n`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const unrankedIds = Object.keys(placement).filter(id =&gt; placement[id] === 'unranked');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (unrankedIds.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const titles = unrankedIds.map(id =&gt; movies[id]?.title || '').filter(Boolean).join(', ');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>text += `[미분류] ${titles}\n`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const kakaoUrl = `https://story.kakao.com/share?url=${encodeURIComponent(location.href)}&amp;text=${encodeURIComponent(text)}`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>window.open(kakaoUrl, '_blank', 'width=600,height=400');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
