@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 나의 영화 티어리스트</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #1a1a1a; 
+            color: #fff; 
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .search-box { 
+            text-align: center; 
+            margin-bottom: 30px;
+        }
+        .search-box input { 
+            width: 300px; 
+            padding: 10px; 
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+        }
+        .tier-list { display: flex; gap: 20px; margin-top: 30px; }
+        .tier-column { flex: 1; }
+        .tier-header { 
+            background: #333; 
+            padding: 15px; 
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .tier-box { 
+            background: #2a2a2a; 
+            min-height: 200px; 
+            padding: 15px;
+            border: 2px dashed #555;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 나의 영화 티어리스트</h1>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="영화 제목 검색...">
+        </div>
+
+        <div class="tier-list">
+            <div class="tier-column">
+                <div class="tier-header">S</div>
+                <div class="tier-box" id="tier-S"></div>
+            </div>
+            <div class="tier-column">
+                <div class="tier-header">A</div>
+                <div class="tier-box" id="tier-A"></div>
+            </div>
+            <div class="tier-column">
+                <div class="tier-header">B</div>
+                <div class="tier-box" id="tier-B"></div>
+            </div>
+            <div class="tier-column">
+                <div class="tier-header">C</div>
+                <div class="tier-box" id="tier-C"></div>
+            </div>
+            <div class="tier-column">
+                <div class="tier-header">D</div>
+                <div class="tier-box" id="tier-D"></div>
+            </div>
+            <div class="tier-column">
+                <div class="tier-header">F</div>
+                <div class="tier-box" id="tier-F"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '당신의_API_키_여기';
+        const TIERS = ['S', 'A', 'B', 'C', 'D', 'F'];
+        
+        let movies = {};
+        let placement = {};
+
+        async function searchMovies(query) {
+            if (!query) return;
+            try {
+                const response = await fetch(
+                    `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${query}&language=ko-KR`
+                );
+                const data = await response.json();
+                console.log('검색 결과:', data.results);
+            } catch (error) {
+                console.error('API 오류:', error);
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                searchMovies(e.target.value);
+            }
+        });
+    </script>
+</body>
+</html>
