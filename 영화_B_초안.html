@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>영화 티어리스트</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --accent:#10b981;
+    --danger:#ef4444;
+    --border:#e5e7eb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:var(--bg);
+    color:#111827;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    padding:18px 24px;
+    background:linear-gradient(90deg,#111827,#1f2937);
+    color:#fff;
+  }
+  header h1{
+    margin:0;
+    font-size:18px;
+    letter-spacing:-0.3px;
+  }
+  header p{margin:6px 0 0;font-size:13px;color:#d1d5db}
+  .container{
+    display:grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap:18px;
+    padding:18px;
+    max-width:1100px;
+    margin:22px auto;
+  }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px;
+    min-height:360px;
+    display:flex;
+    flex-direction:column;
+  }
+  .panel h2{
+    margin:0 0 8px 0;
+    font-size:15px;
+  }
+  .zone{
+    flex:1;
+    padding:8px;
+    border-radius:8px;
+    background:linear-gradient(180deg, #ffffff00, #ffffff00);
+    overflow:auto;
+    min-height:120px;
+  }
+  .zone.dragover{
+    outline:3px dashed rgba(16,185,129,0.18);
+    box-shadow:0 4px 18px rgba(16,185,129,0.08) inset;
+  }
+  .zoneLabel{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .count{
+    font-size:12px;color:var(--muted);
+    background:#f3f4f6;padding:4px 8px;border-radius:999px;
+  }
+
+  /* Movie card */
+  .card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:linear-gradient(180deg,#ffffff,#fbfbfd);
+    border:1px solid var(--border);
+    padding:10px 12px;
+    margin-bottom:8px;
+    border-radius:8px;
+    cursor:grab;
+    user-select:none;
+  }
+  .card:active{cursor:grabbing}
+  .card .title{flex:1;font-size:14px}
+  .card .actions{display:flex;gap:8px;align-items:center}
+  .btn{
+    border:0;background:transparent;padding:6px;border-radius:6px;cursor:pointer;
+  }
+  .btn.delete{color:var(--danger);font-weight:600}
+  .footer{
+    max-width:1100px;margin:0 auto;padding:12px 18px 40px;display:flex;gap:12px;align-items:center;justify-content:center;
+  }
+  .addBox{
+    display:flex;gap:8px;width:100%;max-width:720px;
+  }
+  input[type="text"]{
+    flex:1;padding:10px 12px;border-radius:8px;border:1px solid var(--border);font-size:14px;
+  }
+  button.primary{
+    background:linear-gradient(180deg,#0ea5a5,#0891b2);color:#fff;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;
+  }
+  /* center tiers layout */
+  .tiers{
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .tierRow{
+    display:flex;align-items:center;gap:12px;
+    padding:8px;border-radius:8px;border:1px dashed transparent;
+    background:linear-gradient(180deg,#ffffff,#fbfbfd);
+  }
+  .tierLabel{
+    width:56px;font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tierZone{flex:1;min-height:60px;padding:6px;border-radius:6px;overflow:auto}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  footer.note{max-width:1100px;margin:8px auto 40px;color:var(--muted);font-size:13px;padding:0 18px}
+  @media(max-width:900px){
+    .container{grid-template-columns:1fr; padding:12px;}
+    .footer{flex-direction:column;padding-bottom:30px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>영화 티어리스트</h1>
+  <p>카드를 드래그하여 S / A / B / C 또는 보지 않은 영화 칸으로 옮기세요. 변경사항은 자동 저장됩니다.</p>
+</header>
+
+<main class="container" id="main">
+  <section class="panel">
+    <div class="zoneLabel">
+      <h2>🎬 영화 목록</h2>
+      <div class="count" id="count-list">0</div>
+    </div>
+    <div class="zone" id="zone-list" data-zone="list"></div>
+    <p class="hint">새로 추가한 영화는 이곳에 쌓입니다.</p>
+  </section>
+
+  <section class="panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <h2>⭐ 티어 랭킹</h2>
+      <div class="count" id="count-tiers">0</div>
+    </div>
+    <div class="tiers">
+      <div class="tierRow">
+        <div class="tierLabel">S</div>
+        <div class="tierZone zone" id="zone-s" data-zone="s"></div>
+      </div>
+      <div class="tierRow">
+        <div class="tierLabel">A</div>
+        <div class="tierZone zone" id="zone-a" data-zone="a"></div>
+      </div>
+      <div class="tierRow">
+        <div class="tierLabel">B</div>
+        <div class="tierZone zone" id="zone-b" data-zone="b"></div>
+      </div>
+      <div class="tierRow">
+        <div class="tierLabel">C</div>
+        <div class="tierZone zone" id="zone-c" data-zone="c"></div>
+      </div>
+    </div>
+    <p class="hint">영화 카드를 티어별로 드래그하세요.</p>
+  </section>
+
+  <section class="panel">
+    <div class="zoneLabel">
+      <h2>❌ 본 적 없음</h2>
+      <div class="count" id="count-unseen">0</div>
+    </div>
+    <div class="zone" id="zone-unseen" data-zone="unseen"></div>
+    <p class="hint">아직 보지 않은 영화를 여기에 보관하세요.</p>
+  </section>
+</main>
+
+<div class="footer">
+  <div class="addBox">
+    <input id="newTitle" type="text" placeholder="영화 제목을 입력하고 Enter 또는 추가를 누르세요" />
+    <button class="primary" id="addBtn">추가</button>
+  </div>
+</div>
+
+<footer class="note">
+  동작: 드래그 앤 드롭 / 삭제(✕) / 입력 후 Enter로 추가. 변경사항은 브라우저에 저장됩니다.
+</footer>
+
+<script>
+(function(){
+  // Zone keys: list, s, a, b, c, unseen
+  const STORAGE_KEY = 'movieTierState_v1';
+  const initialMovies = [
+    "헤어질결심","인터스텔라","문라이트","화양연화","기생충","호프","흐르는 여정","맨홀","오아시스"
+  ];
+
+  // state: {list: [{id,title}], s:[], a:[], b:[], c:[], unseen:[]}
+  let state = loadFromStorage() || makeInitialState();
+
+  // get zone elements
+  const zoneIds = ['list','s','a','b','c','unseen'];
+  const zoneEls = {};
+  zoneIds.forEach(k=>{
+    const el = document.getElementById('zone-' + (k==='list' ? 'list' : (k==='unseen' ? 'unseen' : k)));
+    zoneEls[k] = el;
+    setupZone(el);
+  });
+
+  document.getElementById('addBtn').addEventListener('click', addFromInput);
+  document.getElementById('newTitle').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') addFromInput();
+  });
+
+  renderAll();
+
+  // Helpers
+  function makeInitialState(){
+    const s = {list:[], s:[], a:[], b:[], c:[], unseen:[]};
+    let idCounter = Date.now();
+    initialMovies.forEach(title=>{
+      s.list.push({id: 'm' + (idCounter++), title});
+    });
+    saveToStorage(s);
+    return s;
+  }
+
+  function saveToStorage(st){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(st));
+    }catch(e){
+      console.error('저장 실패', e);
+    }
+  }
+
+  function loadFromStorage(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      // basic validation
+      if(typeof parsed !== 'object') return null;
+      zoneIds.forEach(k=>{ if(!Array.isArray(parsed[k])) parsed[k]=[]; });
+      return parsed;
+    }catch(e){
+      console.warn('로컬 저장소 로드 불가', e);
+      return null;
+    }
+  }
+
+  function renderAll(){
+    zoneIds.forEach(k=>{
+      renderZone(k);
+    });
+    updateCounts();
+  }
+
+  function renderZone(zoneKey){
+    const el = zoneEls[zoneKey];
+    el.innerHTML = '';
+    const items = state[zoneKey] || [];
+    items.forEach(item=>{
+      const card = createCardElement(item, zoneKey);
+      el.appendChild(card);
+    });
+  }
+
+  function createCardElement(item, zoneKey){
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.draggable = true;
+    card.id = item.id;
+    card.dataset.title = item.title;
+    card.dataset.zone = zoneKey;
+
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = item.title;
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+
+    const del = document.createElement('button');
+    del.className = 'btn delete';
+    del.title = '삭제';
+    del.textContent = '✕';
+    del.addEventListener('click', function(e){
+      e.stopPropagation();
+      removeItem(zoneKey, item.id);
+    });
+
+    actions.appendChild(del);
+
+    card.appendChild(title);
+    card.appendChild(actions);
+
+    // Drag events
+    card.addEventListener('dragstart', function(e){
+      e.dataTransfer.setData('application/json', JSON.stringify({id: item.id, from: zoneKey}));
+      // for Firefox
+      e.dataTransfer.effectAllowed = 'move';
+      card.style.opacity = '0.6';
+    });
+    card.addEventListener('dragend', function(){
+      card.style.opacity = '';
+    });
+
+    return card;
+  }
+
+  function setupZone(el){
+    el.addEventListener('dragover', function(e){
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('dragover');
+    });
+    el.addEventListener('dragenter', function(e){
+      e.preventDefault();
+      el.classList.add('dragover');
+    });
+    el.addEventListener('dragleave', function(e){
+      // only remove if leaving the element bounds
+      if(!el.contains(e.relatedTarget)) el.classList.remove('dragover');
+    });
+    el.addEventListener('drop', function(e){
+      e.preventDefault();
+      el.classList.remove('dragover');
+      let payload = null;
+      try{
+        const raw = e.dataTransfer.getData('application/json') || e.dataTransfer.getData('text/plain');
+        payload = raw ? JSON.parse(raw) : null;
+      }catch(err){
+        console.warn('드롭 데이터 파싱 실패', err);
+      }
+      if(!payload || !payload.id) return;
+      const toZone = el.dataset.zone;
+      moveItem(payload.id, payload.from, toZone);
+    });
+  }
+
+  function moveItem(id, fromZone, toZone){
+    if(!id || !fromZone || !toZone) return;
+    if(fromZone === toZone) {
+      // no-op but still update storage to persist order if any
+      saveToStorage(state);
+      return;
+    }
+    const fromArr = state[fromZone] || [];
+    const idx = fromArr.findIndex(x=>x.id === id);
+    if(idx === -1) {
+      // item might have moved already; find and remove anywhere
+      for(const z of zoneIds){
+        const j = (state[z]||[]).findIndex(x=>x.id===id);
+        if(j!==-1){
+          state[z].splice(j,1);
+          break;
+        }
+      }
+    } else {
+      const [item] = fromArr.splice(idx,1);
+      state[toZone].push(item);
+    }
+    saveToStorage(state);
+    renderAll();
+  }
+
+  function removeItem(zoneKey, id){
+    const arr = state[zoneKey] || [];
+    const idx = arr.findIndex(x=>x.id === id);
+    if(idx !== -1) arr.splice(idx,1);
+    saveToStorage(state);
+    renderAll();
+  }
+
+  function addFromInput(){
+    const input = document.getElementById('newTitle');
+    const val = input.value.trim();
+    if(!val) return;
+    const id = 'm' + (Date.now() + Math.floor(Math.random()*1000));
+    state.list.push({id, title: val});
+    input.value = '';
+    saveToStorage(state);
+    renderAll();
+    // focus back
+    input.focus();
+  }
+
+  function updateCounts(){
+    document.getElementById('count-list').textContent = (state.list||[]).length;
+    const tierTotal = (state.s||[]).length + (state.a||[]).length + (state.b||[]).length + (state.c||[]).length;
+    document.getElementById('count-tiers').textContent = tierTotal;
+    document.getElementById('count-unseen').textContent = (state.unseen||[]).length;
+  }
+
+  // expose simple reset for debugging (not shown in UI)
+  window.__movieTier = {
+    getState: ()=>JSON.parse(JSON.stringify(state)),
+    reset: ()=>{ localStorage.removeItem(STORAGE_KEY); location.reload(); }
+  };
+})();
+</script>
+
+</body>
+</html>
