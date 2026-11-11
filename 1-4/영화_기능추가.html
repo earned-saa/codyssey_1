@@ -28,24 +28,25 @@
     .pool-head { margin:0 0 8px; border:0; padding:0; background:transparent; color:var(--muted); font-size:17px; font-weight:700; text-align:left; }
     #pool { border:1.5px dashed var(--line); border-radius:14px; background:#fff; }
     
-    .card-wrapper { position:relative; }
-    .card { width:98px; min-height:62px; padding:8px; border:1px solid transparent; border-radius:10px; font-size:14px; font-weight:650; line-height:1.35; overflow-wrap:anywhere; color:var(--ink); cursor:grab; display:block; background:inherit; }
+    .card-item { display:flex; gap:8px; align-items:flex-start; }
+    .card { width:98px; min-height:62px; padding:8px; border:1px solid transparent; border-radius:10px; font-size:14px; font-weight:650; line-height:1.35; overflow-wrap:anywhere; color:var(--ink); cursor:grab; flex-shrink:0; }
     .card[aria-pressed="true"] { outline:3px solid var(--green); outline-offset:2px; }
-    .card-note { display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px; z-index:10; background:#fff; border:1.5px solid var(--line); border-radius:10px; padding:8px; font-size:12px; font-weight:400; line-height:1.4; color:var(--ink); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-    .card-wrapper.active .card-note { display:block; }
-    .card-note textarea { width:100%; min-height:50px; border:1px solid var(--line); border-radius:6px; padding:6px; font-family:inherit; font-size:12px; resize:none; }
-    .card-note textarea::placeholder { color:var(--muted); }
-    .card-note .note-count { font-size:11px; color:var(--muted); margin-top:4px; text-align:right; }
+    
+    .card-note-display { flex:1; min-width:120px; padding:8px; border-radius:8px; background:#fafafa; border:1px solid var(--line); font-size:13px; line-height:1.4; color:var(--ink); display:flex; flex-direction:column; gap:6px; }
+    .card-note-display textarea { width:100%; min-height:40px; border:1px solid var(--line); border-radius:6px; padding:6px; font-family:inherit; font-size:12px; resize:none; }
+    .card-note-display textarea::placeholder { color:var(--muted); }
+    .card-note-display .note-count { font-size:11px; color:var(--muted); text-align:right; }
+    .card-note-display .note-text { word-break:break-word; white-space:pre-wrap; }
     
     .count { display:block; font-size:14px; font-weight:600; }
     .note { font-size:13px; color:var(--muted); margin-top:18px; }
     :focus-visible { outline:3px solid #ba613a; outline-offset:3px; }
-    @media(max-width:420px) { .label { width:48px; } .card { width:90px; } .drop { padding:10px; gap:8px; } }
+    @media(max-width:420px) { .label { width:48px; } .card { width:90px; } .drop { padding:10px; gap:8px; } .card-item { flex-direction:column; } .card-note-display { min-width:auto; } }
   </style>
 </head>
 <body>
   <main>
-    <header><div><h1>내 영화 티어리스트</h1><p class="sub">영화를 선택한 뒤 옮길 등급 글자를 눌러 주세요. 카드를 끌어서 놓아도 됩니다. 카드를 다시 누르면 감상을 쓸 수 있어요.</p></div></header>
+    <header><div><h1>내 영화 티어리스트</h1><p class="sub">영화를 선택한 뒤 옮길 등급 글자를 눌러 주세요. 카드를 끌어서 놓아도 됩니다. 카드 옆에 감상을 입력하세요.</p></div></header>
     <form class="tools" id="add-form">
       <input id="title" aria-label="영화 제목" placeholder="영화 제목 추가" maxlength="80">
       <button type="submit">추가</button>
@@ -87,8 +88,8 @@
       showMessage((item.title || '영화') + '를 옮겼어요.');
     }
     function card(item,index) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card-wrapper';
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'card-item';
       
       const element = document.createElement('button');
       element.type = 'button'; element.className = 'card'; element.draggable = true;
@@ -99,14 +100,9 @@
       
       element.addEventListener('click',event => {
         event.stopPropagation();
-        const wasSelected = selected === item.id;
-        selected = wasSelected ? null : item.id;
+        selected = selected === item.id ? null : item.id;
         render();
-        if (selected) {
-          showMessage((item.title || '영화') + '를 선택했어요. 감상을 입력하거나 등급을 옮겨 주세요.');
-        } else {
-          showMessage('선택을 해제했어요.');
-        }
+        showMessage(selected ? (item.title || '영화') + '를 선택했어요.' : '선택을 해제했어요.');
       });
       
       element.addEventListener('dragstart',event => { 
@@ -115,7 +111,7 @@
       });
       
       const noteDiv = document.createElement('div');
-      noteDiv.className = 'card-note';
+      noteDiv.className = 'card-note-display';
       
       const textarea = document.createElement('textarea');
       textarea.placeholder = '50자 내외로 감상을 입력하세요';
@@ -139,9 +135,9 @@
       updateCount();
       
       noteDiv.append(textarea,countSpan);
-      wrapper.append(element,noteDiv);
+      itemDiv.append(element,noteDiv);
       
-      return wrapper;
+      return itemDiv;
     }
     function wireDrop(element,tier) {
       element.addEventListener('dragover',event => { event.preventDefault(); element.closest('.row')?.classList.add('over'); });
@@ -158,23 +154,12 @@
         label.addEventListener('click',() => { if (selected) move(selected,tier); else showMessage('먼저 영화 카드를 선택해 주세요.'); });
         
         const drop = document.createElement('div'); drop.className = 'drop'; drop.dataset.tier = tier;
-        state.items.forEach((item,index) => { 
-          if (item.tier === tier) {
-            const wrapper = card(item,index);
-            if (selected === item.id) wrapper.classList.add('active');
-            drop.append(wrapper);
-          }
-        });
+        state.items.forEach((item,index) => { if (item.tier === tier) drop.append(card(item,index)); });
         wireDrop(drop,tier); row.append(label,drop); tiers.append(row);
       }
       const pool = document.querySelector('#pool'); pool.replaceChildren();
-      state.items.forEach((item,index) => { 
-        if (item.tier === 'pool') {
-          const wrapper = card(item,index);
-          if (selected === item.id) wrapper.classList.add('active');
-          pool.append(wrapper);
-        }
-      });
+      state.items.forEach((item,index) => { if (item.tier === 'pool') pool.append(card(item,index)); });
+      
     }
     wireDrop(document.querySelector('#pool'),'pool');
     document.querySelector('#pool-label').addEventListener('click',() => { if (selected) move(selected,'pool'); else showMessage('먼저 영화 카드를 선택해 주세요.'); });
