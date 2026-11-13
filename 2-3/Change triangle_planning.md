@@ -91,16 +91,6 @@
 - 하단 안내 문구: "빈도는 선택한 횟수일 뿐 감정의 강도나 심리 상태를 진단하지 않아."
 - 기록 저장·삭제 시 **자동 갱신**
 
-**데이터 처리 방식**
-
-```
-억제감정: records.flatMap(r => r.suppressed)
-핵심감정: records.flatMap(r => Array.isArray(r.core) ? r.core : [r.core])
-방어기제: records.flatMap(r => r.defense)
-→ 각 항목별 빈도 계산 후 내림차순 정렬
-```
-
----
 
 #### ③ 저장된 감정 기록 (기록 카드 목록)
 
@@ -112,21 +102,6 @@
   - 선택한 핵심감정 태그 **(여러 개 가능)**
   - 선택한 방어기제 태그
   - **[삭제] 버튼** → 해당 기록 삭제 + 통계 자동 갱신
-
----
-
-## 주요 함수 목록
-
-| 함수명 | 역할 |
-|---|---|
-| `saveRecord()` | 폼 입력값 수집 → 유효성 검사 → 로컬스토리지 저장 → 폼 초기화 |
-| `loadRecords()` | 로컬스토리지에서 기록 불러와 카드 렌더링 → `renderStats()` 호출 |
-| `deleteRecord(id)` | 해당 id 기록 삭제 → `loadRecords()` 재호출 |
-| `renderStats()` | 억제감정/핵심감정/방어기제 빈도 계산 → 바 차트 렌더링 |
-| `renderBarChart(id, data)` | 특정 컨테이너에 바 차트 HTML 생성 |
-| `exportStatsCSV()` | 통계 데이터를 CSV로 변환 → 파일 다운로드 |
-| `escapeHtml(str)` | XSS 방지용 HTML 이스케이프 |
-| `getRecords()` | 로컬스토리지에서 JSON 파싱하여 배열 반환 |
 
 ---
 
