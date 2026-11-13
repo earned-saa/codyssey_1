@@ -535,7 +535,23 @@
             .diagram-labels { grid-template-columns: 1fr; }
             .defense-options { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
         }
-    </style>
+   /* 상황 입력 지시문 */
+.input-guide {
+    font-size: 0.88em;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.8;
+    background: #f0f4ff;
+    border-left: 3px solid #667eea;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+}
+
+.input-guide span {
+    color: #e07b6a;
+    font-size: 0.95em;
+}
+   </style>
 </head>
 <body>
 <div class="container">
@@ -710,16 +726,19 @@
             <div class="form-section">
 
                 <!-- 1단계: 상황 -->
-                <div class="form-step">
-                    <label>
-                        <span class="step-number">1</span>
-                        상황을 입력하세요
-                    </label>
-                    <textarea
-                        id="situation"
-                        placeholder="감정이 발생한 상황을 구체적으로 입력하세요&#10;예: 상사가 내 의견을 무시했다&#10;예: 친구가 약속 시간에 늦게 왔다">
-                    </textarea>
-                </div>
+<div class="form-step">
+    <label>
+        <span class="step-number">1</span>
+        상황을 입력하세요
+    </label>
+    <!-- 지시문: label로 분리 -->
+    <p class="input-guide">
+        📝 감정이 발생한 상황을 구체적으로 적어보세요.<br>
+        <span>예) 상사가 내 의견을 무시했다 / 친구가 약속 시간에 늦게 왔다</span>
+    </p>
+    <textarea id="situation" placeholder="여기에 입력하세요..."></textarea>
+</div>
+
 
                 <!-- 2단계: 억제감정 -->
                 <div class="form-step">
