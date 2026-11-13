@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>변화의 삼각형 - 감정 기록 앱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== 온보딩 ===== */
+        .onboarding {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .onboarding h1 {
+            color: #667eea;
+            font-size: 2.4em;
+            margin-bottom: 8px;
+        }
+
+        .onboarding .subtitle {
+            color: #764ba2;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .onboarding .content {
+            text-align: left;
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .onboarding .content h2 {
+            color: #667eea;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+
+        .onboarding .content h2:first-child {
+            margin-top: 0;
+        }
+
+        .onboarding .content p {
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .onboarding .content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .onboarding .content li {
+            margin-bottom: 7px;
+            color: #555;
+        }
+
+        /* ===== 변화의 삼각형 다이어그램 ===== */
+        .triangle-diagram {
+            background: #fdf8f0;
+            border: 2px solid #e8d5b0;
+            border-radius: 12px;
+            padding: 30px 20px 20px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .triangle-diagram h3 {
+            color: #c0392b;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .triangle-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 20px;
+        }
+
+        .triangle-svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* 다이어그램 아래 설명 박스들 */
+        .diagram-labels {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .diagram-label-box {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 8px;
+            font-size: 0.82em;
+            line-height: 1.5;
+            border: 2px solid #ddd;
+        }
+
+        .diagram-label-box.defense {
+            border-color: #8e44ad;
+            background: #f5eeff;
+        }
+
+        .diagram-label-box.inhibitory {
+            border-color: #e67e22;
+            background: #fff5e6;
+        }
+
+        .diagram-label-box.core {
+            border-color: #c0392b;
+            background: #fff0f0;
+        }
+
+        .diagram-label-box strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.95em;
+        }
+
+        .diagram-label-box.defense strong { color: #8e44ad; }
+        .diagram-label-box.inhibitory strong { color: #e67e22; }
+        .diagram-label-box.core strong { color: #c0392b; }
+
+        .open-state-box {
+            background: #e8f5e9;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 12px;
+            font-size: 0.88em;
+            color: #1a6b3a;
+            line-height: 1.6;
+        }
+
+        .open-state-box strong {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 4px;
+            color: #155d27;
+        }
+
+        /* ===== 시작 버튼 ===== */
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 50px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+        }
+
+        /* ===== 기록 페이지 헤더 ===== */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 2em; margin-bottom: 8px; }
+        .header p  { font-size: 0.95em; opacity: 0.9; }
+
+        .content-area { padding: 40px; }
+
+        /* ===== 폼 ===== */
+        .form-section {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .form-step { margin-bottom: 25px; }
+
+        .form-step label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-right: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .hint-text {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 17px;
+            height: 17px;
+            margin-right: 7px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label,
+        .radio-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        /* ===== 방어기제 카테고리 ===== */
+        .defense-category { margin-bottom: 18px; }
+
+        .defense-category-title {
+            background: #e8ecff;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .defense-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin-left: 8px;
+        }
+
+        .defense-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .defense-option input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+        }
+
+        .defense-option label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 0.88em;
+            color: #555;
+        }
+
+        /* ===== 버튼 ===== */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-save, .btn-reset {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+
+        .btn-reset { background: #e0e0e0; color: #333; }
+        .btn-reset:hover { background: #d0d0d0; }
+
+        /* ===== 기록 목록 ===== */
+        .records-section { margin-top: 40px; }
+
+        .records-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .records-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .record-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .record-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.15);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .record-time { font-size: 0.9em; color: #999; font-weight: 500; }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover { background: #ff5252; transform: scale(1.05); }
+
+        .record-situation {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .record-situation-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .record-situation-text { color: #555; line-height: 1.5; }
+
+        .record-emotions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .emotion-block {
+            background: #f8f9ff;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .emotion-block-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.85em;
+            margin-bottom: 6px;
+        }
+
+        .emotion-tags, .defense-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .defense-block {
+            background: #fff3f3;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .defense-block-title {
+            font-weight: 600;
+            color: #ff6b6b;
+            font-size: 0.85em;
+            margin-bottom: 6px;
+        }
+
+        .defense-tag {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-        size: 1em;
+        }
+
+        .empty-message-icon { font-size: 3em; margin-bottom: 10px; }
+
+        /* ===== 성공 메시지 ===== */
+        .success-message {
+            background: #e8f5e9;
+            border: 2px solid #27ae60;
+            color: #1a6b3a;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .success-message.show { display: block; }
+
+        /* ===== 반응형 ===== */
+        @media (max-width: 600px) {
+            .onboarding { padding: 20px; }
+            .content-area { padding: 20px; }
+            .form-section { padding: 18px; }
+            .onboarding h1 { font-size: 1.7em; }
+            .diagram-labels { grid-template-columns: 1fr; }
+            .defense-options { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ===== 페이지 1: 온보딩 ===== -->
+    <div id="page-onboarding" class="page active">
+        <div class="onboarding">
+            <h1>🔺 변화의 삼각형</h1>
+            <p class="subtitle">감정을 알아차리고, 나를 이해하는 여정</p>
+
+            <div class="content">
+
+                <!-- 변화의 삼각형 다이어그램 -->
+                <h2>📐 변화의 삼각형이란?</h2>
+                <p>
+                    <strong>변화의 삼각형(The Change Triangle)</b></strong>은 힐러리 제이콥스 헨델이 제안한
+                    심리 모델입니다. 우리가 감정을 어떻게 회피하고, 그 아래 어떤 핵심 감정이 숨어 있는지를
+                    삼각형 구조로 시각화합니다.
+                </p>
+
+                <div class="triangle-diagram">
+                    <h3>🔺 변화의 삼각형 (The Change Triangle®)</h3>
+
+                    <!-- SVG 삼각형 다이어그램 -->
+<div class="triangle-wrap">
+    <svg class="triangle-svg" viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- 배경 삼각형 (연한 살구색) -->
+        <polygon
+            points="240,30 30,300 450,300"
+            fill="#f4a58a"
+            stroke="#c0392b"
+            stroke-width="2.5"
+            opacity="0.85"
+        />
+
+        <!-- 안쪽 역삼각형 (방어기제 영역, 연보라) -->
+        <polygon
+            points="240,30 100,200 380,200"
+            fill="#d7bde2"
+            stroke="#8e44ad"
+            stroke-width="2"
+            opacity="0.7"
+        />
+
+        <!-- 파란 곡선 화살표 (억제감정 → 핵심감정) -->
+        <path
+            d="M 355,110 Q 390,220 265,265"
+            fill="none"
+            stroke="#2980b9"
+            stroke-width="4"
+            marker-end="url(#arrowBlue)"
+            opacity="0.85"
+        />
+
+        <!-- 아래 초록 화살표 (핵심감정 → 열린 마음) -->
+        <line
+            x1="240" y1="308"
+            x2="240" y2="338"
+            stroke="#27ae60"
+            stroke-width="4"
+            marker-end="url(#arrowGreen)"
+        />
+
+        <!-- 화살표 마커 정의 -->
+        <defs>
+            <marker id="arrowBlue" markerWidth="10" markerHeight="7"
+                refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#2980b9"/>
+            </marker>
+            <marker id="arrowGreen" markerWidth="10" markerHeight="7"
+                refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+            </marker>
+        </defs>
+
+        <!-- ✅ 텍스트: 방어기제 (왼쪽 상단) -->
+        <text x="62" y="62"  font-size="18" font-weight="bold" fill="#6c3483" text-anchor="middle">방어기제</text>
+        <text x="62" y="86"  font-size="14" fill="#6c3483" text-anchor="middle">감정을 피하기 위해</text>
+        <text x="62" y="106" font-size="14" fill="#6c3483" text-anchor="middle">하는 모든 것</text>
+
+        <!-- ✅ 텍스트: 억제감정 (오른쪽 상단) -->
+        <text x="418" y="62"  font-size="18" font-weight="bold" fill="#a04000" text-anchor="middle">억제감정</text>
+        <text x="418" y="86"  font-size="14" fill="#a04000" text-anchor="middle">불안감</text>
+        <text x="418" y="106" font-size="14" fill="#a04000" text-anchor="middle">수치심</text>
+        <text x="418" y="126" font-size="14" fill="#a04000" text-anchor="middle">죄책감</text>
+
+        <!-- ✅ 텍스트: 핵심감정 (삼각형 중앙 하단) -->
+        <text x="240" y="248" font-size="18" font-weight="bold" fill="#922b21" text-anchor="middle">핵심감정</text>
+        <text x="240" y="272" font-size="14" fill="#922b21" text-anchor="middle">두려움 · 분노 · 슬픔 · 기쁨</text>
+        <text x="240" y="292" font-size="14" fill="#922b21" text-anchor="middle">흥분 · 혐오 · 성적 흥분</text>
+
+    </svg>
+</div>
+
+                    <!-- 열린 마음 상태 박스 -->
+                    <div class="open-state-box">
+                        <strong>💚 열린 마음의 진정한 자아 (Openhearted State of the Authentic Self)</strong>
+                        차분함 · 호기심 · 연결감 · 연민 · 자신감 · 용기 · 명료함
+                    </div>
+
+                    <!-- 세 영역 설명 박스 -->
+                    <div class="diagram-labels">
+                        <div class="diagram-label-box defense">
+                            <strong>🛡️ 방어기제</strong>
+                            감정을 피하기 위해 무의식적으로 하는 행동, 생각, 말의 패턴입니다.
+                            예: 농담으로 넘기기, 화제 돌리기, 과도하게 일하기
+                        </div>
+                        <div class="diagram-label-box inhibitory">
+                            <strong>⚠️ 억제감정</strong>
+                            핵심감정이 올라올 때 먼저 느껴지는 방어적 감정입니다.
+                            불안감, 수치심, 죄책감이 대표적입니다.
+                        </div>
+                        <div class="diagram-label-box core">
+                            <strong>❤️ 핵심감정</strong>
+                            억제감정 아래 숨겨진 진짜 감정입니다.
+                            두려움, 분노, 슬픔, 기쁨, 흥분, 혐오 등이 있습니다.
+                        </div>
+                    </div>
+                </div>
+
+                <h2>🎯 이 앱은 누구를 위한 건가요?</h2>
+                <ul>
+                    <li>자신의 감정 패턴을 이해하고 싶은 분</li>
+                    <li>왜 자꾸 같은 행동을 반복하는지 알고 싶은 분</li>
+                    <li>감정을 회피하지 않고 직면하고 싶은 분</li>
+                    <li>심리적 자기 이해를 일상에서 실천하고 싶은 분</li>
+                </ul>
+
+                <h2>🔄 어떻게 사용하나요?</h2>
+                <ul>
+                    <li>감정이 일어난 <strong>상황</strong>을 구체적으로 기록하세요</li>
+                    <li>먼저 느껴진 <strong>억제감정</strong>(수치심, 불안감, 죄책감)을 선택하세요</li>
+                    <li>그 아래 숨겨진 <strong>핵심감정</strong>을 찾아보세요</li>
+                    <li>어떤 <strong>방어기제</strong>로 감정을 회피했는지 알아차리세요</li>
+                    <li>기록이 쌓이면 자신만의 <strong>패턴</strong>이 보이기 시작합니다</li>
+                </ul>
+
+                <h2>⚠️ 중요한 안내</h2>
+                <p>
+                    이 앱은 <strong>의료 진단 도구가 아닙니다</strong>. 심리 치료를 대체할 수 없습니다.
+                    깊은 심리적 어려움이 있다면 반드시 전문가의 도움을 받으시기 바랍니다.
+                </p>
+            </div>
+
+            <button class="btn-start" onclick="goToRecording()">✏️ 감정 기록 시작하기</button>
+        </div>
+    </div>
+
+    <!-- ===== 페이지 2: 기록 페이지 ===== -->
+    <div id="page-recording" class="page">
+        <div class="header">
+            <h1>📝 오늘의 감정 기록</h1>
+            <p>상황 → 억제감정 → 핵심감정 → 방어기제 순서로 기록하세요</p>
+            <button
+                onclick="goToOnboarding()"
+                style="margin-top:12px; background:rgba(255,255,255,0.2);
+                       color:white; border:1px solid rgba(255,255,255,0.5);
+                       padding:7px 18px; border-radius:6px; cursor:pointer; font-size:0.9em;">
+                ← 처음으로
+            </button>
+        </div>
+
+        <div class="content-area">
+
+            <!-- 성공 메시지 -->
+            <div id="success-message" class="success-message">
+                ✅ 감정 기록이 저장되었습니다!
+            </div>
+
+            <!-- 입력 폼 -->
+            <div class="form-section">
+
+                <!-- 1단계: 상황 -->
+                <div class="form-step">
+                    <label>
+                        <span class="step-number">1</span>
+                        상황을 입력하세요
+                    </label>
+                    <textarea
+                        id="situation"
+                        placeholder="감정이 발생한 상황을 구체적으로 입력하세요&#10;예: 상사가 내 의견을 무시했다&#10;예: 친구가 약속 시간에 늦게 왔다">
+                    </textarea>
+                </div>
+
+                <!-- 2단계: 억제감정 -->
+                <div class="form-step">
+                    <label>
+                        <span class="step-number">2</span>
+                        억제감정을 선택하세요 (중복 선택 가능)
+                    </label>
+                    <p class="hint-text">💭 핵심감정이 올라올 때 먼저 느껴지는 방어적 감정들입니다</p>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="shame" name="suppressed" value="수치심">
+                            <label for="shame">수치심</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="anxiety" name="suppressed" value="불안감">
+                            <label for="anxiety">불안감</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="guilt" name="suppressed" value="죄책감">
+                            <label for="guilt">죄책감</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3단계: 핵심감정 -->
+                <div class="form-step">
+                    <label>
+                        <span class="step-number">3</span>
+                        핵심감정을 선택하세요
+                    </label>
+                    <p class="hint-text">❤️ 억제감정 아래 숨겨진 진정한 감정입니다</p>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="c-fear" name="core" value="두려움">
+                            <label for="c-fear">두려움</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-anger" name="core" value="분노">
+                            <label for="c-anger">분노</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-sadness" name="core" value="슬픔">
+                            <label for="c-sadness">슬픔</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-joy" name="core" value="기쁨">                            <label for="c-joy">기쁨</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-excitement" name="core" value="흥분">
+                            <label for="c-excitement">흥분</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-disgust" name="core" value="혐오">
+                            <label for="c-disgust">혐오</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="c-sexual" name="core" value="성적 흥분">
+                            <label for="c-sexual">성적 흥분</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4단계: 방어기제 32개 -->
+                <div class="form-step">
+                    <label>
+                        <span class="step-number">4</span>
+                        방어기제를 선택하세요 (중복 선택 가능)
+                    </label>
+                    <p class="hint-text">🛡️ 감정을 피하기 위해 무의식적으로 했던 행동을 선택하세요</p>
+
+                    <!-- 카테고리 1: 언어·표현 방식 -->
+                    <div class="defense-category">
+                        <div class="defense-category-title">💬 언어·표현 방식</div>
+                        <div class="defense-options">
+                            <div class="defense-option">
+                                <input type="checkbox" id="d1" name="defense" value="농담으로 넘기기">
+                                <label for="d1">농담으로 넘기기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d2" name="defense" value="빈정거리기·비꼬기">
+                                <label for="d2">빈정거리기·비꼬기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d3" name="defense" value="웃음으로 감정 감추기">
+                                <label for="d3">웃음으로 감정 감추기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d4" name="defense" value="웃어넘기기">
+                                <label for="d4">웃어넘기기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d5" name="defense" value="모호하게 말하기·얼버무리기">
+                                <label for="d5">모호하게 말하기·얼버무리기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d6" name="defense" value="화제 돌리기">
+                                <label for="d6">화제 돌리기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d9" name="defense" value="중얼거리기·불분명하게 말하기">
+                                <label for="d9">중얼거리기·불분명하게 말하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d10" name="defense" value="습관적으로 사과하기">
+                                <label for="d10">습관적으로 사과하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d11" name="defense" value="말하지 않기·침묵하기">
+                                <label for="d11">말하지 않기·침묵하기</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 카테고리 2: 신체·행동 방식 -->
+                    <div class="defense-category">
+                        <div class="defense-category-title">🏃 신체·행동 방식</div>
+                        <div class="defense-options">
+                            <div class="defense-option">
+                                <input type="checkbox" id="d7" name="defense" value="눈 맞춤 피하기">
+                                <label for="d7">눈 맞춤 피하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d8" name="defense" value="눈 굴리기·눈을 흘기기">
+                                <label for="d8">눈 굴리기·눈을 흘기기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d12" name="defense" value="듣지 않기">
+                                <label for="d12">듣지 않기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d13" name="defense" value="멍해지기·정신이 다른 곳에 가 있기">
+                                <label for="d13">멍해지기·정신이 다른 곳에 가 있기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d14" name="defense" value="피곤함을 통해 감정적 접촉 피하기">
+                                <label for="d14">피곤함을 통해 감정적 접촉 피하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d28" name="defense" value="과도하게 일하기">
+                                <label for="d28">과도하게 일하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d31" name="defense" value="과도하게 운동하기">
+                                <label for="d31">과도하게 운동하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d32" name="defense" value="과식하기">
+                                <label for="d32">과식하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d17" name="defense" value="미루기·지연하기">
+                                <label for="d17">미루기·지연하기</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 카테고리 3: 사고·태도 방식 -->
+                    <div class="defense-category">
+                        <div class="defense-category-title">🧠 사고·태도 방식</div>
+                        <div class="defense-options">
+                            <div class="defense-option">
+                                <input type="checkbox" id="d15" name="defense" value="비판하기·흠잡기">
+                                <label for="d15">비판하기·흠잡기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d16" name="defense" value="완벽주의">
+                                <label for="d16">완벽주의</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d18" name="defense" value="특정 생각이나 일에 지나치게 몰두하기">
+                                <label for="d18">특정 생각이나 일에 지나치게 몰두하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d19" name="defense" value="과민함·짜증 내기">
+                                <label for="d19">과민함·짜증 내기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d20" name="defense" value="부정적으로 생각하기">
+                                <label for="d20">부정적으로 생각하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d21" name="defense" value="타인 판단하기">
+                                <label for="d21">타인 판단하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d22" name="defense" value="자기비판·자기판단">
+                                <label for="d22">자기비판·자기판단</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d23" name="defense" value="편견">
+                                <label for="d23">편견</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d24" name="defense" value="인종차별적 태도">
+                                <label for="d24">인종차별적 태도</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d25" name="defense" value="과대성·자신을 과장하기">
+                                <label for="d25">과대성·자신을 과장하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d26" name="defense" value="여성혐오">
+                                <label for="d26">여성혐오</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d27" name="defense" value="잘못된 대상에게 공격성 표출하기">
+                                <label for="d27">잘못된 대상에게 공격성 표출하기</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d29" name="defense" value="감정적 무감각">
+                                <label for="d29">감정적 무감각</label>
+                            </div>
+                            <div class="defense-option">
+                                <input type="checkbox" id="d30" name="defense" value="무력감에 머무르기">
+                                <label for="d30">무력감에 머무르기</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 저장/초기화 버튼 -->
+                <div class="btn-group">
+                    <button class="btn-save" onclick="saveRecord()">💾 기록 저장하기</button>
+                    <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
+                </div>
+            </div>
+
+            <!-- 기록 목록 -->
+            <div class="records-section">
+                <div class="records-title">📋 저장된 감정 기록</div>
+                <div class="records-list" id="records-list">
+                    <div class="empty-message">
+                        <div class="empty-message-icon">📭</div>
+                        <div>아직 기록이 없습니다. 첫 번째 감정을 기록해보세요!</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== 페이지 전환 =====
+    function goToRecording() {
+        document.getElementById('page-onboarding').classList.remove('active');
+        document.getElementById('page-recording').classList.add('active');
+        loadRecords();
+    }
+
+    function goToOnboarding() {
+        document.getElementById('page-recording').classList.remove('active');
+        document.getElementById('page-onboarding').classList.add('active');
+    }
+
+    // ===== 로컬스토리지 관리 =====
+    function getRecords() {
+        const data = localStorage.getItem('emotionRecords');
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveToStorage(records) {
+        localStorage.setItem('emotionRecords', JSON.stringify(records));
+    }
+
+    // ===== 폼 저장 =====
+    function saveRecord() {
+        const situation = document.getElementById('situation').value.trim();
+        const suppressed = Array.from(
+            document.querySelectorAll('input[name="suppressed"]:checked')
+        ).map(el => el.value);
+        const core = document.querySelector('input[name="core"]:checked')?.value || '';
+        const defense = Array.from(
+            document.querySelectorAll('input[name="defense"]:checked')
+        ).map(el => el.value);
+
+        if (!situation) { alert('⚠️ 상황을 입력해주세요.'); return; }
+        if (suppressed.length === 0) { alert('⚠️ 억제감정을 선택해주세요.'); return; }
+        if (!core) { alert('⚠️ 핵심감정을 선택해주세요.'); return; }
+        if (defense.length === 0) { alert('⚠️ 방어기제를 선택해주세요.'); return; }
+
+        const newRecord = {
+            id: Date.now(),
+            timestamp: new Date().toLocaleString('ko-KR'),
+            situation,
+            suppressed,
+            core,
+            defense
+        };
+
+        const records = getRecords();
+        records.unshift(newRecord);
+        saveToStorage(records);
+
+        showSuccessMessage();
+        resetForm();
+        loadRecords();
+    }
+
+    // ===== 폼 초기화 =====
+    function resetForm() {
+        document.getElementById('situation').value = '';
+        document.querySelectorAll('input[name="suppressed"]').forEach(el => el.checked = false);
+        document.querySelectorAll('input[name="core"]').forEach(el => el.checked = false);
+        document.querySelectorAll('input[name="defense"]').forEach(el => el.checked = false);
+        document.getElementById('situation').focus();
+    }
+
+    // ===== 성공 메시지 =====
+    function showSuccessMessage() {
+        const msg = document.getElementById('success-message');
+        msg.classList.add('show');
+        setTimeout(() => msg.classList.remove('show'), 3000);
+    }
+
+    // ===== 기록 렌더링 =====
+    function loadRecords() {
+        const records = getRecords();
+        const container = document.getElementById('records-list');
+
+        if (records.length === 0) {
+            container.innerHTML = `
+                <div class="empty-message">
+                    <div class="empty-message-icon">📭</div>
+                    <div>아직 기록이 없습니다. 첫 번째 감정을 기록해보세요!</div>
+                                </div>`;
+            return;
+        }
+
+        container.innerHTML = records.map(record => `
+            <div class="record-card" id="record-${record.id}">
+                <div class="record-header">
+                    <span class="record-time">🕐 ${record.timestamp}</span>
+                    <button class="btn-delete" onclick="deleteRecord(${record.id})">🗑️ 삭제</button>
+                </div>
+
+                <div class="record-situation">
+                    <div class="record-situation-title">📌 상황</div>
+                    <div class="record-situation-text">${escapeHtml(record.situation)}</div>
+                </div>
+
+                <div class="record-emotions">
+                    <div class="emotion-block" style="border-left-color:#e67e22;">
+                        <div class="emotion-block-title" style="color:#e67e22;">⚠️ 억제감정</div>
+                        <div class="emotion-tags">
+                            ${record.suppressed.map(e => `
+                                <span class="tag" style="background:#e67e22;">${escapeHtml(e)}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="emotion-block" style="border-left-color:#c0392b;">
+                        <div class="emotion-block-title" style="color:#c0392b;">❤️ 핵심감정</div>
+                        <div class="emotion-tags">
+                            <span class="tag" style="background:#c0392b;">${escapeHtml(record.core)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="defense-block">
+                    <div class="defense-block-title">🛡️ 방어기제</div>
+                    <div class="defense-tags">
+                        ${record.defense.map(d => `
+                            <span class="defense-tag">${escapeHtml(d)}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== 기록 삭제 =====
+    function deleteRecord(id) {
+        if (!confirm('이 기록을 삭제할까요?')) return;
+        const records = getRecords().filter(r => r.id !== id);
+        saveToStorage(records);
+        loadRecords();
+    }
+
+    // ===== XSS 방지 =====
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(text));
+        return div.innerHTML;
+    }
+
+    // ===== 초기 로드 =====
+    window.addEventListener('DOMContentLoaded', () => {
+        loadRecords();
+    });
+</script>
+</body>
+</html>
